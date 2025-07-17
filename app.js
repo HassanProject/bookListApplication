@@ -9,7 +9,47 @@ function Book(title, author, isbn){
 // UI Constructor ES5 Way
 function UI() {};
 
-// Prototype
+// Prototype Function for UI Object
+UI.prototype.addBookToList = function(book){
+    const bookList = document.getElementById('book-list');
+    // Create Table Row
+    const row = document.createElement('tr');
+    // Create Table Element to insert value
+    row.innerHTML = `
+        <td>${book.title}</td> 
+        <td>${book.author}</td> 
+        <td>${book.isbn}</td>
+        <td><a href="#">x<a></td> `;
+    // Append row to bookList
+    bookList.appendChild(row);
+}
+// Clear Fields Prototype Function
+UI.prototype.clearFields = function(){
+    document.getElementById('title').value = '';
+    document.getElementById('author').value = '';
+    document.getElementById('isbn').value = '';
+}
+
+// Massage
+UI.prototype.setMessage = function(message, className){
+    // Creat a div
+    const div = document.createElement('div');
+    // Add a class
+    div.className = `alert ${className}`;
+    // Append Messasge
+    div.appendChild(document.createTextNode(message));
+    // Set parent div(container)
+    const parentDiv = document.querySelector('.container');
+    // Get form id
+    const bookForm = document.querySelector('#book-form');
+    // Insert div above parent div
+    parentDiv.insertBefore(div,bookForm)
+    // Remove message after 3 sec
+    setTimeout(function(){
+       div.remove();
+    }, 2000);
+}
+
 
 document.getElementById('book-form').addEventListener('submit', function(e){
     // Get form values
@@ -20,14 +60,24 @@ document.getElementById('book-form').addEventListener('submit', function(e){
 // Instantiate Book Object 
 const book = new Book(title,author,isbn);
 
-//Instantiate UI Object
+ //Instantiate UI Object
 const ui = new UI();
 
-ui.addBookToList()
+// Validate input
+if(title === '' || author === '' || isbn === ''){
+    ui.setMessage('Please Fill in All Fields', 'error')
+}else{
+     // Add Book
+    ui.addBookToList(book);
+     // Set message
+    ui.setMessage('Book Added', 'success');
+    // Clear fields
+    ui.clearFields();
+}
+   
 
 
-
-e.preventDefault(book);
+e.preventDefault();
 })
 
 
