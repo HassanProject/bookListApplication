@@ -1,16 +1,16 @@
 
 // Book Constructor ES5  Way
-function Book(title, author, isbn){
+function Book(title, author, isbn) {
     this.title = title;
     this.author = author;
     this.isbn = isbn;
 }
 
 // UI Constructor ES5 Way
-function UI() {};
+function UI() { };
 
 // Prototype Function for UI Object
-UI.prototype.addBookToList = function(book){
+UI.prototype.addBookToList = function (book) {
     const bookList = document.getElementById('book-list');
     // Create Table Row
     const row = document.createElement('tr');
@@ -19,19 +19,34 @@ UI.prototype.addBookToList = function(book){
         <td>${book.title}</td> 
         <td>${book.author}</td> 
         <td>${book.isbn}</td>
-        <td><a href="#">x<a></td> `;
+        <td><a href="#" class='delete'>x<a></td> `;
     // Append row to bookList
     bookList.appendChild(row);
 }
 // Clear Fields Prototype Function
-UI.prototype.clearFields = function(){
+UI.prototype.clearFields = function () {
     document.getElementById('title').value = '';
     document.getElementById('author').value = '';
     document.getElementById('isbn').value = '';
 }
+// Delete Book
+UI.prototype.deleteBook = function(target){
+    if(target.className === 'delete'){
+        target.parentElement.parentElement.remove();
+    }
+}
+document.getElementById('book-list').addEventListener('click',function(e){
+    const ui = new UI();
+    ui.deleteBook(e.target);
+    // Delete Message
+    ui.setMessage('Book Deleted', 'success');
+
+   
+});
+
 
 // Massage
-UI.prototype.setMessage = function(message, className){
+UI.prototype.setMessage = function (message, className) {
     // Creat a div
     const div = document.createElement('div');
     // Add a class
@@ -43,41 +58,38 @@ UI.prototype.setMessage = function(message, className){
     // Get form id
     const bookForm = document.querySelector('#book-form');
     // Insert div above parent div
-    parentDiv.insertBefore(div,bookForm)
+    parentDiv.insertBefore(div, bookForm)
     // Remove message after 3 sec
-    setTimeout(function(){
-       div.remove();
-    }, 2000);
+    setTimeout(function () {
+        div.remove();
+    }, 3000);
 }
 
 
-document.getElementById('book-form').addEventListener('submit', function(e){
+document.getElementById('book-form').addEventListener('submit', function (e) {
     // Get form values
     const title = document.getElementById('title').value;
-        author = document.getElementById('author').value;
-        isbn = document.getElementById('isbn').value;
+    author = document.getElementById('author').value;
+    isbn = document.getElementById('isbn').value;
 
-// Instantiate Book Object 
-const book = new Book(title,author,isbn);
+    // Instantiate Book Object 
+    const book = new Book(title, author, isbn);
 
- //Instantiate UI Object
-const ui = new UI();
+    //Instantiate UI Object
+    const ui = new UI();
 
-// Validate input
-if(title === '' || author === '' || isbn === ''){
-    ui.setMessage('Please Fill in All Fields', 'error')
-}else{
-     // Add Book
-    ui.addBookToList(book);
-     // Set message
-    ui.setMessage('Book Added', 'success');
-    // Clear fields
-    ui.clearFields();
-}
-   
-
-
-e.preventDefault();
+    // Validate input
+    if (title === '' || author === '' || isbn === '') {
+        ui.setMessage('Please Fill in All Fields', 'error')
+    } else {
+        // Add Book
+        ui.addBookToList(book);
+        // Set message
+        ui.setMessage('Book Added', 'success');
+        // Clear fields
+        ui.clearFields();
+    }
+    e.preventDefault();
 })
 
 
